@@ -7,13 +7,10 @@ from collections import Counter
 
 
 # --- 1. Configuration & Initialization ---
-pygame.init()
-
 WIDTH, HEIGHT = 1200, 800
-screen = pygame.Surface((WIDTH, HEIGHT))
+screen = None
 window = None
 render_rect = pygame.Rect(0, 0, WIDTH, HEIGHT)
-pygame.display.set_caption("Texas Hold'em - 8 Player Ring Game - iPhone Web")
 
 # --- WSOP Color Palette ---
 WSOP_BLUE = (20, 30, 60)
@@ -47,19 +44,15 @@ PURPLE_SB = (147, 112, 219)
 BLUE_BB = (65, 105, 225)
 
 # Fonts
-font_huge = pygame.font.SysFont("impact", 80)
-font_large = pygame.font.SysFont("arial", 40, bold=True)
-font_bet_amount = pygame.font.SysFont("impact", 28) 
-font_med = pygame.font.SysFont("arial", 22, bold=True)
-font_small = pygame.font.SysFont("arial", 16, bold=True)
-font_tiny = pygame.font.SysFont("arial", 14, bold=True)
-font_timer = pygame.font.SysFont("arial", 20, bold=True)
-font_win = pygame.font.SysFont("arial", 26, bold=True)
-
-# Suit Font
-font_suit = pygame.font.SysFont("segoeuisymbol", 40)
-if font_suit.get_height() < 20:
-    font_suit = pygame.font.SysFont("arial", 40)
+font_huge = None
+font_large = None
+font_bet_amount = None
+font_med = None
+font_small = None
+font_tiny = None
+font_timer = None
+font_win = None
+font_suit = None
 
 # Game Parameters
 CARD_WIDTH, CARD_HEIGHT = 60, 90
@@ -78,8 +71,35 @@ def clamp(value, low, high):
     return max(low, min(high, value))
 
 
+def init_runtime():
+    global screen, font_huge, font_large, font_bet_amount, font_med
+    global font_small, font_tiny, font_timer, font_win, font_suit
+
+    if screen is not None:
+        return
+
+    pygame.init()
+    screen = pygame.Surface((WIDTH, HEIGHT))
+    pygame.display.set_caption("Texas Hold'em - 8 Player Ring Game - iPhone Web")
+
+    font_huge = pygame.font.SysFont("impact", 80)
+    font_large = pygame.font.SysFont("arial", 40, bold=True)
+    font_bet_amount = pygame.font.SysFont("impact", 28)
+    font_med = pygame.font.SysFont("arial", 22, bold=True)
+    font_small = pygame.font.SysFont("arial", 16, bold=True)
+    font_tiny = pygame.font.SysFont("arial", 14, bold=True)
+    font_timer = pygame.font.SysFont("arial", 20, bold=True)
+    font_win = pygame.font.SysFont("arial", 26, bold=True)
+
+    font_suit = pygame.font.SysFont("segoeuisymbol", 40)
+    if font_suit.get_height() < 20:
+        font_suit = pygame.font.SysFont("arial", 40)
+
+
 def refresh_window(size=None):
     global window, render_rect
+
+    init_runtime()
 
     flags = pygame.RESIZABLE
     if window is None:
